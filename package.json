@@ -1,0 +1,20 @@
+{
+  "name": "projectdevtinder",
+  "version": "1.0.0",
+  "description": "tinder for dev",
+  "main": "index.js",
+  "scripts": {
+    "start":"node src/app.cjs",
+    "dev": "nodemon src/app.cjs"
+  },
+  "keywords": [
+    "nodejs",
+    "javascript"
+  ],
+  "author": "Pratyush kumar",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
+}
