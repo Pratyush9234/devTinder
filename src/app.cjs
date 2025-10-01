@@ -12,8 +12,8 @@ app.use("/hello",(req,res)=>{
    res.send("Hello im responding");
 });
 
-app.use((req,res)=>{
-  res.send("Hello from the dashboard");
+app.use("/dashboard",(req,res)=>{
+  res.send("Hello from the dashboard to the client");
 });
 
 app.listen(7777,()=>{
