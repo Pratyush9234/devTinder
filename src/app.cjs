@@ -51,7 +51,7 @@ app.use("/admin/getAlldata",(req,res)=>{
 });
 
 app.use("/admin/DeleteAlldata",(req,res)=>{
-  res.send("Unauthorized access and data is not sent");
+  res.send("Deleted all data");
 });
 
 app.listen(7777,()=>{
