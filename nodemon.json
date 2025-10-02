@@ -1,0 +1,6 @@
+{
+  "watch": ["src/**/*.js", "src/**/*.cjs"],
+  "ignore": ["node_modules/**", ".git/**", "nodemon.json"],
+  "ext": "js,cjs",
+  "delay": 2000
+}

@@ -2,11 +2,11 @@
   "name": "projectdevtinder",
   "version": "1.0.0",
   "description": "tinder for dev",
-  "main": "index.js",
+  "main": "src/app.cjs",
   "scripts": {
-    "start":"node src/app.cjs",
-    "dev": "nodemon src/app.cjs"
-  },
+  "start": "node src/app.cjs",
+  "dev": "nodemon src/app.cjs"
+},
   "keywords": [
     "nodejs",
     "javascript"
