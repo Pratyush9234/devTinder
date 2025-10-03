@@ -4,9 +4,9 @@
   "description": "tinder for dev",
   "main": "src/app.cjs",
   "scripts": {
-  "start": "node src/app.cjs",
-  "dev": "nodemon src/app.cjs"
-},
+    "start": "node src/app.cjs",
+    "dev": "nodemon src/app.cjs"
+  },
   "keywords": [
     "nodejs",
     "javascript"
@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^5.1.0",
+    "mongoose": "^8.19.0",
     "nodemon": "^3.1.10"
   }
 }
