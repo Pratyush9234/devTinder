@@ -32,19 +32,18 @@ const app=express();
 // app.use("/dashboard",(req,res)=>{
 //   res.send("Hello from the dashboard to the client");
 // });
+const {adminauth}=require("./middlewares/auth.cjs");
+const {userauth}=require("./middlewares/auth.cjs");
 
-app.use("/admin",((req,res,next)=>{
-  console.log("Admin authentication is getting checked ");
-  const token="xyz";
-  const isAuthorized= token==="xyz";
-  if(!isAuthorized){
-    res.status(401).send("The admin is unauthorized");
-  }
-  else{
-    next();                                                 // this whole section is the middleware as it prevents
-                                                            // from writing the logic again and again 
-  }
-}));
+app.use("/admin", adminauth,(req,res)=>{
+  res.send("admin is authorized and you can proceed further");
+});
+
+
+
+app.get("/user",userauth,(req,res)=>{
+  res.send("Data is  sent");
+});
 
 app.use("/admin/getAlldata",(req,res)=>{
    res.send("The admin is authorized and all data is sent ");
