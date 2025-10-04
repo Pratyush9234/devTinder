@@ -79,6 +79,36 @@ app.post("/signup",async(req,res)=>{
   res.status(500).send("Something went wrong");
 }
 });
+//get document using get api
+
+app.get("/user",async(req,res)=>{
+  const email= req.body.emailId;
+    try{
+     const user = await User.find({emailId:email});
+     if(user.length==0){
+      res.status(404).send("User not found");
+     }
+     res.send(user);
+    }
+    catch{
+      res.status(500).send("Something went wrong ");
+    }
+});
+
+// Feed API - GET/feed -get all the user from the database
+app.get("/feed",async(req,res)=>{
+    
+    try{
+      const user= await User.find({});
+      if(user.length==0){
+        res.status(404).send("User not found");
+      }
+      res.send(user);
+    }
+    catch(err){
+      res.status(404).send("Something went wrong");
+    }
+});
 connectdb().then(()=>{
   console.log("Database connection is succesfully established ");
   app.listen(7777,()=>{
