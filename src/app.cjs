@@ -1,5 +1,4 @@
 const express= require('express');
-
 const app=express();
 
 //handling the code 
@@ -66,15 +65,13 @@ const connectdb=require("./config/database");   // connecting to the database fo
 
 const User=require("./models/user");
 
-app.post("/signup",async(req,res)=>{
-   
+app.use(express.json());// middleware 
 
- const user= new User({
-    firstname: "Pratyush",
-    lastname: "Kumar",
-    emaidId:"Pratyush@gmail.com",
-    password:"Pratyush@123"
-});
+app.post("/signup",async(req,res)=>{
+   //creating a new instance for the user model
+ const user = new User(req.body);
+
+ 
  try{
    await user.save();
  res.send("user added successfully ");
