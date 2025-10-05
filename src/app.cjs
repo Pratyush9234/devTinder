@@ -109,6 +109,34 @@ app.get("/feed",async(req,res)=>{
       res.status(404).send("Something went wrong");
     }
 });
+//Delete api - deleteing documents from database 
+app.delete("/delete",async(req,res)=>{
+  const userId= req.body.userId;
+  try{
+    const user=await User.findByIdAndDelete(userId);
+    
+    res.send("user deleted successfully");
+  }
+  catch(err){
+    res.sendStatus(401).send("Cant delete the user id something went wrong");
+  }
+});
+
+//Update api - updating the data of the user
+
+app.patch("/update",async(req,res)=>{
+    const userId= req.body.userId; //will find the user id from here
+    const data=req.body; //this will fetch the whole body u written in postman to update
+    
+    try{
+       const user=await User.findByIdAndUpdate({_id: userId},data);
+       res.send("user updated succesfully");
+    }
+    catch(err)
+{
+    res.status(400).send("something went wrong");
+}});
+
 connectdb().then(()=>{
   console.log("Database connection is succesfully established ");
   app.listen(7777,()=>{
