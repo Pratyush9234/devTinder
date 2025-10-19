@@ -1,6 +1,8 @@
 const express= require('express');
 const app=express();
 
+
+
 //handling the code 
 
 // app.get("/user/:userID/:name/:password",(req,res)=>{
@@ -67,6 +69,8 @@ const User=require("./models/user");
 
 app.use(express.json());// middleware 
 
+
+
 app.post("/signup",async(req,res)=>{
    //creating a new instance for the user model
  const user = new User(req.body);
@@ -76,10 +80,10 @@ app.post("/signup",async(req,res)=>{
    await user.save();
  res.send("user added successfully ");
  }catch(err){
-  res.status(500).send("Something went wrong");
-}
+  res.status(500).send("Something went wrong " + err.message);
+  }
 });
-//get document using get api
+//finding document using get api
 
 app.get("/user",async(req,res)=>{
   const email= req.body.emailId;
@@ -129,12 +133,16 @@ app.patch("/update",async(req,res)=>{
     const data=req.body; //this will fetch the whole body u written in postman to update
     
     try{
-       const user=await User.findByIdAndUpdate({_id: userId},data);
+       const user=await User.findByIdAndUpdate({_id: userId},data,{
+        returnDocument: 'after',
+        runValidators: true,
+       });
+       console.log(user);
        res.send("user updated succesfully");
     }
     catch(err)
 {
-    res.status(400).send("something went wrong");
+    res.status(400).send("something went wrong"+err.message);
 }});
 
 connectdb().then(()=>{

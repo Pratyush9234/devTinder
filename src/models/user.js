@@ -1,25 +1,53 @@
 const mongoose = require("mongoose");
 
-const userschema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     firstname:{
-        type: String
+        type: String,
+        minLength: 4,
     },
     lastname:{
-        type: String
+        type: String,
+        
     },
     emailId:{
-        type: String
+        type: String,
+        required : true,
+        unique : true,
+        lowecase : true,
+        trim : true,
     },
     password:{
-        type: String
+        type: String,
+        required : true,
     },
     age:{
-        type: Number
+        type: Number,
+        min: 19,
+        max: 80,
     },
     gender:{
-        type: String
-    }
+        type: String,
+        default: "https://stock.adobe.com/search?k=dummy",
+        validate(value){
+            if(!["male","female","other"].includes(value)){
+                throw new Error("gender data is invalid");
+            }
+        },
+    },
+    photourl:{
+      type: String,
+    },
+    about:{
+        type: String,
+        default: "Hey there! I am using DevTinder",
+    },
+    skills:{
+        type: [String],
+        
+    },
 });
 
-const User =mongoose.model("user",userschema)
-module.exports=User;
+
+
+const User = mongoose.model("user", userSchema);
+module.exports = User;
