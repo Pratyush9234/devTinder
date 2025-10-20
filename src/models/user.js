@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required : true,
         unique : true,
+        index: true,
         lowecase : true,
         trim : true,
     },
@@ -27,15 +28,13 @@ const userSchema = new mongoose.Schema({
     },
     gender:{
         type: String,
-        default: "https://stock.adobe.com/search?k=dummy",
-        validate(value){
-            if(!["male","female","other"].includes(value)){
-                throw new Error("gender data is invalid");
-            }
-        },
+        enum:["male","female","other"],
+        default:"other",
+        
     },
     photourl:{
       type: String,
+      default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     },
     about:{
         type: String,
@@ -45,9 +44,11 @@ const userSchema = new mongoose.Schema({
         type: [String],
         
     },
-});
-
-
+},
+{
+    timestamps: true,
+},
+   );
 
 const User = mongoose.model("user", userSchema);
 module.exports = User;

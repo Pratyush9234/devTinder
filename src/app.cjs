@@ -78,7 +78,7 @@ app.post("/signup",async(req,res)=>{
  
  try{
    await user.save();
- res.send("user added successfully ");
+   res.send("user added successfully ");
  }catch(err){
   res.status(500).send("Something went wrong " + err.message);
   }
@@ -142,7 +142,7 @@ app.patch("/update",async(req,res)=>{
     }
     catch(err)
 {
-    res.status(400).send("something went wrong"+err.message);
+    res.status(400).send("something went wrong" +err.message);
 }});
 
 connectdb().then(()=>{
