@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema({
     firstname:{
@@ -16,10 +17,20 @@ const userSchema = new mongoose.Schema({
         index: true,
         lowecase : true,
         trim : true,
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error("Email is invalid" + value);
+            }
+        }
     },
     password:{
         type: String,
         required : true,
+        validate(value){
+            if(!validator.isStrongPassword(value)){
+                throw new Error("Passowrd is not strong enough"+ value)
+            }
+        }
     },
     age:{
         type: Number,
@@ -29,12 +40,17 @@ const userSchema = new mongoose.Schema({
     gender:{
         type: String,
         enum:["male","female","other"],
-        default:"other",
+       
         
     },
     photourl:{
       type: String,
-      default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+      default: "https://www.pngall.com/wp-content/uploads/5/Profile-PNG-High-Quality-Image.png",
+      validate(value){
+        if(!validator.isURL(value)){
+          throw new Error ("Photo url is invalid " + value);  // these are the validations in schema
+        }
+      }
     },
     about:{
         type: String,
