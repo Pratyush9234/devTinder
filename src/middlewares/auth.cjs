@@ -1,29 +1,34 @@
- const adminauth= (req,res,next)=>{
-  console.log("Admin authentication is getting checked ");
-  const token="xyz";
-  const isAuthorized= token==="xyz";
-  if(!isAuthorized){
-    res.status(401).send("The admin is unauthorized");
-  }
-  else{
-    next();                                                 // this whole section is the middleware as it prevents
-                                                            // from writing the logic again and again 
-  }
-};
+ const jwt = require('jsonwebtoken');
+ const User= require("../models/user.js");
 
-const userauth= (req,res,next)=>{
-  console.log("Admin authentication is getting checked ");
-  const token="xyz";
-  const isAuthorized= token==="xyz";
-  if(!isAuthorized){
-    res.status(401).send("The admin is unauthorized");
+const userauth= async (req,res,next)=>{
+  // Read the tokens from rq cookies 
+  
+  try{const {token}= req.cookies; 
+  if(!token){
+    throw new Error("No token found");
   }
-  else{
-    next();                                                 
-  }
-};
 
-module.exports ={
-  adminauth,
-  userauth,
+  //validate/verify the token 
+  const decodeObj = await jwt.verify(token,"DEV@Pratyush790");
+
+  const {_id} = decodeObj; // getting user id from decoded object
+
+  const user = await User.findById(_id); // fetching user from db
+  if(!user){
+    throw new Error("User not found");
+  }
+  req.user = user; // attaching user to req object
+  next();
+ 
 }
+catch(err){
+  res.status(401).send("Unauthorized User"+ err.message);
+
+};
+}
+module.exports ={
+  
+  userauth,
+};
+

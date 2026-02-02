@@ -1,7 +1,9 @@
+const connectdb = require('./config/database.js');
+connectdb();
 const express= require('express');
 const app=express();
 
-
+const cookieParser = require('cookie-parser');
 
 //handling the code 
 
@@ -63,23 +65,39 @@ const app=express();
 //   res.send("Deleted all data");
 // });
 
-const connectdb=require("./config/database");   // connecting to the database folder 
-
-const User=require("./models/user");
+ 
+const User= require("./models/user.js");
 
 const {validateSignupData} = require("./utils/validation");
 
 const bcrypt = require("bcrypt");
 
+const jwt = require("jsonwebtoken");
+const { connect } = require('mongoose');
+
 app.use(express.json());// middleware 
 
+app.use(cookieParser()); // using cookie parser middleware
+
+const { userauth } = require("./middlewares/auth.cjs");
 
 
-app.post("/signup",async(req,res)=>{
+
+app.get("/profile", userauth , async(req,res)=>{
+  try{
+  const user= req.user; // getting user from req object
+  
+  res.send(user);}
+  catch(err){
+    res.status(401).send( err.message);
+  }
+});
+
+app.post("/signup",async(req,res)=>{ 
    //during signup operation first thing it should happen is Validations of data 
    validateSignupData(req); // validating the signup data
    // Then you should encrypt the password 
-   const {password} = req.body;
+   const {password} = req.body;  //extacting the password from the req body
     const hashedPassword = await bcrypt.hash(password,10); // hashing the password using bcrypt
     console.log(hashedPassword);
     req.body.password= hashedPassword; // replacing the password with hashed password
@@ -96,8 +114,38 @@ app.post("/signup",async(req,res)=>{
   res.status(400).send("ERROR : " + err.message);
   }
 });
-//finding document using get api
 
+app.post("/login", async(req,res)=>{
+   try{
+    const{emailId,password}= req.body;  // first step is extracting the emailid and pass
+    const user= await User.findOne({emailId : emailId}); // findinging the desired from  database
+    if(!user){
+      throw new Error("User not found with email " + emailId);  // checking is user emailid is available in db
+    }
+    const ispasswordvalid = await user.validatePassword(password); // validating the password using bcrypt compare method
+    
+    if(ispasswordvalid){    
+      
+      // creating a jwt token.... 
+      
+      const token = await user.getJWT(); // craeting a token using jwt sign method
+      console.log(token);
+       res.cookie("token",token);     // adding cookie 
+      return res.send("Login successfull");           // comaparing the hashed password with your postman testing password 
+                                                      // if it matches then login success and if not new err is thrown 
+    }
+    else{
+      throw new Error("Invalid password");
+    }
+  }
+   catch(err){
+      res.status(400).send("Something went wrong " + err.message);
+   }
+
+});
+
+
+//finding document using get api
 app.get("/user",async(req,res)=>{
   const email= req.body.emailId;
     try{
@@ -167,6 +215,14 @@ app.patch("/update/:userId",async(req,res)=>{
 {
     res.status(400).send("something went wrong" + err.message);
 }});
+
+app.post("/sendconnectionrequest", userauth, async(req,res)=>{
+   const user = req.user;
+    // sending the conncection request
+    console.log("Connection request sent");
+
+    res.send(user.firstname + " Sent the connection request ");
+});
 
 connectdb().then(()=>{
   console.log("Database connection is succesfully established ");
