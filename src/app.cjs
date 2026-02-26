@@ -23,10 +23,13 @@ app.use(cookieParser()); // using cookie parser middleware
 const authRouter = require("./routes/auth.js");
 const profileRouter = require("./routes/profile.js");
 const requestRouter = require("./routes/requests.js");
+const { default: userrouter } = require('./routes/user.js');
+const userRouter = require('./routes/user.js');
 
 app.use("/",authRouter);
 app.use("/",profileRouter);
 app.use("/",requestRouter);
+app.use("/",userRouter);
 
 //finding document using get api
 app.get("/user",async(req,res)=>{
