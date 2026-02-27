@@ -2,6 +2,7 @@ const express = require("express");
 const userRouter = express.Router();
 const { userauth } = require("../middlewares/auth.cjs");
 const connectionRequests = require("../models/Connectionrequest.js");
+const { connection, default: mongoose } = require("mongoose");
 
 
 userRouter.get("/user/requests/recieved", userauth, async (req, res)=>{
@@ -52,4 +53,21 @@ userRouter.get("/user/connections",userauth,async(req,res)=>{
     res.status(400).send("err "+err.message);
   }
 })
+
+
+userRouter.get("/user/feed",userauth,async(req,res)=>{
+  try{
+      const loggedInUser = req.user;
+      const connectionrequest = await connectionRequests.find({
+        $or:[
+          {fromUserId :(loggedInUser._id)},
+          {toUserId: (loggedInUser._id)},
+        ]
+      });
+      res.send(connectionrequest);
+  }
+  catch(err){
+    res.status(400).send("err "+err.message);
+  }
+});
 module.exports= userRouter;
